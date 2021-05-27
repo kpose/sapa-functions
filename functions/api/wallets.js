@@ -2,6 +2,7 @@ const { db } = require("../utils/admin");
 
 exports.getAllWallets = (req, res) => {
   db.collection("wallets")
+    .where("username", "==", req.user.username)
     .orderBy("createdAt", "desc")
     .get()
     .then((data) => {
@@ -30,6 +31,7 @@ exports.createWallet = (request, response) => {
     income: {},
     expenses: {},
     createdAt: new Date().toISOString(),
+    username: request.user.username,
   };
   db.collection("wallets")
     .add(newWallet)
@@ -51,6 +53,9 @@ exports.deleteWallet = (request, response) => {
     .then((doc) => {
       if (!doc.exists) {
         return response.status(404).json({ error: "Wallet not found" });
+      }
+      if (doc.data().username !== request.user.username) {
+        return response.status(403).json({ error: "UnAuthorized" });
       }
       return document.delete();
     })
