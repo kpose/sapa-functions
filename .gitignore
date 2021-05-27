@@ -47,6 +47,10 @@ build/Release
 # Dependency directories
 node_modules/
 
+
+functions/utils/config.js
+
+/functions/utils/config.js
 # Optional npm cache directory
 .npm
 

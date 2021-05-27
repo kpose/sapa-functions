@@ -3,7 +3,7 @@ const app = require("express")();
 const auth = require("./utils/auth");
 const firebase = require("firebase");
 
-/* wallet apis */
+/* wallet apis-- */
 const {
   getAllWallets,
   createWallet,
