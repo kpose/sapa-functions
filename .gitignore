@@ -68,3 +68,4 @@ functions/utils/config.js
 
 # dotenv environment variables file
 .env
+config.js
