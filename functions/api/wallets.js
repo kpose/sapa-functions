@@ -1,3 +1,4 @@
+const { firestore } = require("firebase-admin");
 const { db } = require("../utils/admin");
 
 exports.getAllWallets = (req, res) => {
@@ -28,10 +29,9 @@ exports.createWallet = (request, response) => {
 
   const newWallet = {
     title: request.body.title,
-    income: {},
-    expenses: {},
     createdAt: new Date().toISOString(),
     username: request.user.username,
+    transactions: [],
   };
   db.collection("wallets")
     .add(newWallet)
@@ -46,8 +46,38 @@ exports.createWallet = (request, response) => {
     });
 };
 
+exports.createTransaction = (request, response) => {
+  if (request.body.amount.trim() === "") {
+    return response.status(400).json({ price: "Enter a valid amount" });
+  }
+
+  const newTransaction = {
+    type: request.body.type,
+    amount: request.body.amount,
+    marchant: request.body.marchant,
+    note: request.body.note,
+    category: request.body.category,
+    createdAt: new Date().toISOString(),
+  };
+
+  let document = db.collection("wallets").doc(`${request.params.walletId}`);
+
+  document
+    .update({
+      transactions: firestore.FieldValue.arrayUnion(newTransaction),
+    })
+    .then(() => {
+      response.json({ message: "Transaction Created successfully" });
+    })
+    .catch((err) => {
+      response.status(500).json({ error: "Something went wrong" });
+      console.error(err);
+    });
+};
+
 exports.deleteWallet = (request, response) => {
   const document = db.doc(`/wallets/${request.params.walletId}`);
+
   document
     .get()
     .then((doc) => {
@@ -73,6 +103,7 @@ exports.editWallet = (request, response) => {
     response.status(403).json({ message: "Not allowed to edit" });
   }
   let document = db.collection("wallets").doc(`${request.params.walletId}`);
+  console.log(document);
   document
     .update(request.body)
     .then(() => {

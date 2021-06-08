@@ -9,6 +9,7 @@ const {
   createWallet,
   deleteWallet,
   editWallet,
+  createTransaction,
 } = require("./api/wallets");
 
 /* user  apis */
@@ -25,6 +26,7 @@ app.get("/wallets", auth, getAllWallets);
 app.post("/createwallet", auth, createWallet);
 app.delete("/deletewallet/:walletId", auth, deleteWallet);
 app.put("/wallet/:walletId", auth, editWallet);
+app.post("/createtransaction/:walletId", auth, createTransaction);
 
 /* user routes */
 app.post("/login", loginUser);
