@@ -19,6 +19,7 @@ const {
   uploadProfilePhoto,
   getUserDetail,
   updateUserDetails,
+  listen,
 } = require("./api/users");
 
 /* wallet routes */
@@ -26,7 +27,18 @@ app.get("/wallets", auth, getAllWallets);
 app.post("/createwallet", auth, createWallet);
 app.delete("/deletewallet/:walletId", auth, deleteWallet);
 app.put("/wallet/:walletId", auth, editWallet);
-app.post("/createtransaction/:walletId", auth, createTransaction);
+
+app.get("/authenticated", function (req, res) {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      res.send(user);
+      // ...
+    } else {
+      //res.send(JSON.stringify(empty));
+      return;
+    }
+  });
+});
 
 /* user routes */
 app.post("/login", loginUser);

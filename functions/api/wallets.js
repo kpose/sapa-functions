@@ -10,10 +10,9 @@ exports.getAllWallets = (req, res) => {
       let wallets = [];
       data.forEach((doc) => {
         wallets.push({
-          postId: doc.id,
+          walletId: doc.id,
           title: doc.data().title,
-          income: doc.data().income,
-          expenses: doc.data().expenses,
+          transactions: doc.data().transactions,
           createdAt: doc.data().createdAt,
         });
       });
